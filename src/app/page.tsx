@@ -1,27 +1,9 @@
 import { Gallery } from "@/components/gallery";
 import { ModeToggle } from "@/components/mode-toggle";
-import fs from "fs";
-import path from "path";
 import Link from "next/link";
+import images from "@/lib/images.json";
 
-async function getOtterImages() {
-  const ottersDir = path.join(process.cwd(), "public/otters");
-  try {
-    const imageFiles = fs.readdirSync(ottersDir);
-    return imageFiles.map((file) => ({
-      src: `/otters/${file}`,
-      tags: ["otter"], // Default tags, can be expanded later
-      sourceUrl: "", // Not available from filesystem
-    }));
-  } catch (error) {
-    console.error("Could not read the otters directory:", error);
-    return [];
-  }
-}
-
-export default async function Home() {
-  const images = await getOtterImages();
-
+export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

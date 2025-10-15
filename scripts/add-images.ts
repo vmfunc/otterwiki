@@ -7,6 +7,7 @@ import puppeteer from "puppeteer";
 const HEADLESS_MODE = true; // Set to false to show the browser for debugging
 const NUM_IMAGES_TO_FETCH = 2000; // Number of images to fetch
 const OUTPUT_DIR = path.join(process.cwd(), "public/otters");
+const MANIFEST_PATH = path.join(process.cwd(), "src/lib/images.json");
 // ---------------------
 
 async function fetchFromPixabay() {
@@ -73,8 +74,8 @@ async function fetchFromPixabay() {
         console.log("No more new images found on this page. Stopping.");
         break; // Exit if no images are found on the page
       }
-      
-      newImageUrls.forEach(url => imageUrls.add(url));
+
+      newImageUrls.forEach((url) => imageUrls.add(url));
       console.log(`Collected ${imageUrls.size} unique image URLs so far.`);
 
       pageNum++;
@@ -104,23 +105,44 @@ async function downloadImage(url: string, filename: string) {
   });
 }
 
+function generateImageManifest() {
+  console.log("Generating image manifest...");
+  if (!fs.existsSync(OUTPUT_DIR)) {
+    console.log("Output directory does not exist. Skipping manifest generation.");
+    return;
+  }
+  const imageFiles = fs.readdirSync(OUTPUT_DIR);
+  const manifest = imageFiles.map((file) => ({
+    src: `/otters/${file}`,
+    tags: ["otter", "pixabay"], // Add more sophisticated tagging later if needed
+    sourceUrl: "", // This would require storing metadata during download
+  }));
+
+  // Ensure lib directory exists
+  const libDir = path.dirname(MANIFEST_PATH);
+  if (!fs.existsSync(libDir)) {
+    fs.mkdirSync(libDir);
+  }
+
+  fs.writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 2), "utf8");
+  console.log(`Image manifest generated with ${manifest.length} images.`);
+}
+
 async function main() {
-  console.log("Starting to fetch images...");
+  console.log("Starting image script...");
   if (!fs.existsSync(OUTPUT_DIR)) {
     fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   }
 
-  const existingFiles = new Set(fs.readdirSync(OUTPUT_DIR));
-  console.log(`Found ${existingFiles.size} existing images in the otters folder.`);
-
   const allFetchedImageUrls = await fetchFromPixabay();
-  
+
   let downloadedCount = 0;
   for (let i = 0; i < allFetchedImageUrls.length; i++) {
     const url = allFetchedImageUrls[i];
     const filename = `otter-${Date.now()}-${i}.jpg`;
 
-    if (existingFiles.has(filename)) continue;
+    // A simple way to avoid re-downloading based on URL (less robust than checking content)
+    // A more robust check would be to store sourceUrl in the manifest and check against that
 
     console.log(`Downloading ${url} to ${filename}`);
     try {
@@ -133,7 +155,12 @@ async function main() {
     }
   }
 
-  console.log(`Script finished. Downloaded ${downloadedCount} new images.`);
+  console.log(`Downloaded ${downloadedCount} new images.`);
+
+  // Always generate a fresh manifest after downloads are complete
+  generateImageManifest();
+
+  console.log("Script finished.");
 }
 
 main();
