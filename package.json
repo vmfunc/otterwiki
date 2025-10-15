@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "add-images": "bun run scripts/add-images.ts"
+    "add-images": "bun run scripts/add-images.ts",
+    "generate-manifest": "bun run scripts/generate-manifest.ts"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
