@@ -2,6 +2,7 @@ import { Gallery } from "@/components/gallery";
 import { ModeToggle } from "@/components/mode-toggle";
 import fs from "fs";
 import path from "path";
+import Link from "next/link";
 
 async function getOtterImages() {
   const ottersDir = path.join(process.cwd(), "public/otters");
@@ -26,11 +27,11 @@ export default async function Home() {
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 items-center">
           <div className="mr-4 hidden md:flex">
-            <a className="mr-6 flex items-center space-x-2" href="/">
+            <Link className="mr-6 flex items-center space-x-2" href="/">
               <span className="hidden font-bold sm:inline-block">
                 otter.wiki
               </span>
-            </a>
+            </Link>
           </div>
           <div className="flex flex-1 items-center justify-end">
             <ModeToggle />
