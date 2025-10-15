@@ -6,12 +6,21 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint",
+    "add-images": "bun run scripts/add-images.ts"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.15",
+    "axios": "^1.12.2",
+    "cheerio": "^1.1.2",
+    "class-variance-authority": "^0.7.1",
+    "lucide-react": "^0.545.0",
+    "next": "15.5.5",
+    "puppeteer": "^24.25.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "next": "15.5.5"
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "typescript": "^5",
