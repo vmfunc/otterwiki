@@ -68,9 +68,10 @@ export function Gallery({ images: allImages }: { images: Image[] }) {
                     src={src}
                     alt={`An otter with tags: ${tags.join(", ")}`}
                     fill
-                    className="rounded-lg object-cover"
+                    className="rounded-lg object-cover md:cursor-default cursor-pointer"
+                    onClick={() => setSelectedImage(src)}
                   />
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
+                  <div className="absolute inset-0 bg-black/50 opacity-0 md:group-hover:opacity-100 transition-opacity md:flex items-center justify-center gap-4 hidden">
                     <button
                       onClick={() => setSelectedImage(src)}
                       className="p-2 rounded-full bg-black/50 text-white"
@@ -134,7 +135,7 @@ export function Gallery({ images: allImages }: { images: Image[] }) {
 
       {selectedImage && (
         <Dialog open onOpenChange={() => setSelectedImage(null)}>
-          <DialogContent className="max-w-4xl">
+          <DialogContent className="max-w-[calc(100vw-2rem)] md:max-w-4xl">
             <DialogHeader>
               <DialogTitle>Otter</DialogTitle>
             </DialogHeader>
@@ -145,6 +146,17 @@ export function Gallery({ images: allImages }: { images: Image[] }) {
               height={1080}
               className="rounded-lg object-contain w-full h-auto"
             />
+            <div className="flex justify-center gap-2 mt-4 md:hidden">
+              <Button
+                variant="outline"
+                size="icon"
+                asChild
+              >
+                <a href={`${selectedImage}?download=true`} download>
+                  <Download className="h-4 w-4" />
+                </a>
+              </Button>
+            </div>
           </DialogContent>
         </Dialog>
       )}
